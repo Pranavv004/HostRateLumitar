@@ -8,6 +8,7 @@ package com.example.HostRateLumiter;
 
  @SpringBootApplication
  public class HostRateLumiterApplication {
+	 
      public static void main(String[] args) {
          SpringApplication.run(HostRateLumiterApplication.class, args);
      }
@@ -23,8 +24,8 @@ package com.example.HostRateLumiter;
              @Override
              public void addCorsMappings(CorsRegistry registry) {
                  registry.addMapping("/**")
-                         .allowedOrigins("*")
-                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+		                 .allowedOrigins("https://clickhouse-webpage.onrender.com")
+		                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                          .allowedHeaders("*");
              }
          };
