@@ -12,9 +12,10 @@ public class RateLimitingService {
     private final Map<String, Integer> customLimits;
 
     public RateLimitingService() {
-        // Define custom rate limits per IP (requests per minute)
         customLimits = new ConcurrentHashMap<>();
-        customLimits.put("117.193.77.254", 2); // Example IP: 3 requests/minute
+        customLimits.put("117.193.77.254", 2); 
+        customLimits.put("192.168.1.1", 4);
+        customLimits.put("192.168.1.101", 6);
     }
 
     public boolean allowRequest(String clientIp) {
