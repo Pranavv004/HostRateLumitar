@@ -33,16 +33,17 @@ public class QueryController {
 
     @GetMapping("/query")
     public ResponseEntity<String> executeQuery(HttpServletRequest request) {
-        String clientIp = request.getRemoteAddr();
+        String clientIp = getClientIp(request);
         totalRequests.incrementAndGet();
         if (rateLimitingService.allowRequest(clientIp)) {
             try (com.clickhouse.jdbc.ClickHouseConnection conn = dataSource.getConnection();
                  Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery("SELECT name FROM testdb.countries LIMIT 1")) {
                 if (rs.next()) {
-                    return ResponseEntity.ok("Result: " + rs.getString("name"));
+                    String country = rs.getString("name");
+                    return ResponseEntity.ok(String.format("Result: %s, IP: %s", country, clientIp));
                 }
-                return ResponseEntity.ok("No results");
+                return ResponseEntity.ok("No results, IP: " + clientIp);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Query failed: " + e.getMessage());
@@ -57,5 +58,13 @@ public class QueryController {
     @GetMapping("/metrics")
     public ResponseEntity<String> getMetrics() {
         return ResponseEntity.ok("Total requests: " + totalRequests.get() + ", Discarded: " + discardedRequests.get());
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String xForwardedFor = request.getHeader("X-Forwarded-For");
+        if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
+            return xForwardedFor.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 }
