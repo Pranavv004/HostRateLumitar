@@ -14,8 +14,8 @@ public class RateLimitingService {
     public RateLimitingService() {
         customLimits = new ConcurrentHashMap<>();
         customLimits.put("117.193.77.254", 2); 
-        customLimits.put("192.168.1.1", 4);
-        customLimits.put("192.168.1.101", 6);
+        customLimits.put("192.168.1.2", 4);
+        customLimits.put("192.168.1.102", 6);
     }
 
     public boolean allowRequest(String clientIp) {
