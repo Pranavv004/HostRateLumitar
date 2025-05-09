@@ -1,33 +1,34 @@
 package com.example.HostRateLumiter;
 
- import org.springframework.boot.SpringApplication;
- import org.springframework.boot.autoconfigure.SpringBootApplication;
- import org.springframework.context.annotation.Bean;
- import org.springframework.web.servlet.config.annotation.CorsRegistry;
- import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
- @SpringBootApplication
- public class HostRateLumiterApplication {
-	 
-     public static void main(String[] args) {
-         SpringApplication.run(HostRateLumiterApplication.class, args);
-     }
+@SpringBootApplication
+public class HostRateLumiterApplication {
+    
+    public static void main(String[] args) {
+        SpringApplication.run(HostRateLumiterApplication.class, args);
+    }
 
-     @Bean
-     public RateLimitingService rateLimitingService() {
-         return new RateLimitingService();
-     }
+    @Bean
+    public RateLimitingService rateLimitingService() {
+        return new RateLimitingService();
+    }
 
-     @Bean
-     public WebMvcConfigurer corsConfigurer() {
-         return new WebMvcConfigurer() {
-             @Override
-             public void addCorsMappings(CorsRegistry registry) {
-                 registry.addMapping("/**")
-		                 .allowedOrigins("https://clickhouse-webpage.onrender.com")
-		                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                         .allowedHeaders("*");
-             }
-         };
-     }
- }
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("https://clickhouse-webpage.onrender.com")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .maxAge(3600);
+            }
+        };
+    }
+}
